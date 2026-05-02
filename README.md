@@ -38,9 +38,12 @@ What `install.sh` does:
 
 ## How it works
 1. **Billing header**: SHA-256 signed `x-anthropic-billing-header` injected as `system[0]`
-2. **System prompt relocation**: Non-identity system entries moved to the first user message as `<system-reminder>` blocks
-3. **Beta flag**: Adds `prompt-caching-scope-2026-01-05`
-4. **Temperature fix**: Strips non-default temperature on Opus 4.6 adaptive thinking, which prevents HTTP 400
+2. **Current Claude Agent SDK identity**: `system[1]` is rewritten to `You are a Claude agent, built on Anthropic's Claude Agent SDK.` with `ttl: 1h` ephemeral cache control
+3. **System prompt relocation**: Non-identity system entries moved to the first user message as `<system-reminder>` blocks; stale legacy Claude Code identity is stripped
+4. **Claude Code request fingerprint**: exact-case JS/Node Stainless headers, `claude-cli/<version> (external, sdk-cli)` User-Agent, per-process `x-claude-code-session-id`, and `metadata.user_id` from `~/.claude.json`
+5. **Tool namespace wrapping**: Hermes tool names are sent as `mcp__hermes__<tool>` and restored from responses for both legacy adapter and Hermes 0.11+ transport paths
+6. **Beta flags**: Adds prompt-caching, advisor-tool, context-1m, context-management, and effort flags without duplicating Hermes-native betas
+7. **Temperature fix**: Strips non-default temperature on Opus 4.6/4.7 adaptive thinking, which prevents HTTP 400
 
 Installed through a `sitecustomize.py` MetaPathFinder hook, so it runs at interpreter startup with no source modifications.
 
@@ -54,7 +57,9 @@ Installed through a `sitecustomize.py` MetaPathFinder hook, so it runs at interp
 ## Compatibility
 - Tested with hermes-agent on Python 3.11+
 - Linux and macOS
-- Depends on `build_anthropic_kwargs(is_oauth=...)` in `agent.anthropic_adapter`, so it may need updating if hermes-agent changes that interface
+- Depends on `build_anthropic_kwargs(is_oauth=...)` in `agent.anthropic_adapter`
+- Response unwrapping supports both legacy `normalize_anthropic_response` and Hermes 0.11+ `AnthropicTransport.normalize_response`
+- Tracks Claude Code 2.1.123+ fingerprint signals; rerun smoke tests after any Claude Code update
 
 ## Troubleshooting
 

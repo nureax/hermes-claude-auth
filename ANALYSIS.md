@@ -229,7 +229,7 @@ If using `mcp__hermes__<name>` namespace: strip any existing `mcp_` or `mcp__` p
 | 1.1.0 | 2026-04-22 | PascalCase mcp_ tools, sdk-cli entrypoint, advisor-tool beta, Stainless spoof headers, ?beta=true |
 | 1.1.1 | 2026-04-22 | Installer only: macOS Keychain auto-mirror |
 | **1.2.0 (needed)** | — | MD5 tool name obfuscation (replaces PascalCase, which Anthropic blocked ~2026-04-24) |
-| **1.4.0 (needed)** | — | 6 fingerprint corrections for CC 2.1.123: identity string, Stainless headers, User-Agent, betas, metadata.user_id, tool namespace |
+| 1.4.0 | 2026-05-02 | Implemented fingerprint corrections for CC 2.1.123+: SDK identity, exact-case Stainless headers, User-Agent/session UUID, metadata.user_id, beta refresh, tool namespace, Hermes transport unwrap |
 | **1.5.x (needed)** | — | Opus 4.7, out-of-extra-usage retry cap |
 
 ---
